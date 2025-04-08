@@ -1,0 +1,76 @@
+from enum import Enum
+
+lines = []
+countriesDict = {}
+countriesList = []
+Y2018 = 0
+Y2007 = 0
+hungaryJoinYear : int
+didHungaryJoinInMay : int
+
+months = ["január", " február ", "március", "április", "május", "június", "július", "augusztus", "szeptember", "október", "november", "december"]
+
+with open("./EUcsatlakozas.txt", 'r', encoding="utf-8") as f:
+    lines = f.readlines()
+
+for line in lines:
+    splitLine = line.split(';')
+    countriesList.append([splitLine[0], splitLine[1]])
+    countriesDict.update({f"{splitLine[0]}" : f"{splitLine[1]}"})
+
+
+for country in countriesList:
+    if int(country[1][:4]) <= 2018:
+        Y2018 += 1
+
+print(f"3. feladat: 2018-ban {Y2018} ország volt része az EU-nak")
+
+
+for country in countriesList:
+    if country[1][:4] == "2007":
+        Y2007 += 1
+
+print(f"4. feladat: 2007-ben {Y2007} ország csatlakozott az EU-ba")
+
+hungaryJoinYear = countriesDict["Magyarország"]
+
+print(f"5. feladat: Magyarország {hungaryJoinYear[:-1]}-ben csatlakozott az EU-hoz")
+
+didHungaryJoinInMay = months[int(countriesDict["Magyarország"][5:7])-1]
+
+if didHungaryJoinInMay:
+    print(f"6. feladat: Igen, Magyarország {didHungaryJoinInMay}ban csatlakozott")
+else:
+    print(f"6. feladat: Nem, Magyarország nem májusban csatlakozott, hanem {didHungaryJoinInMay}ban") # buh
+    
+latestCountry : str
+latestCountryFloat = float(countriesList[0][1][:7] + countriesList[0][1][8:])
+
+for country in countriesList:
+    dateFloat = float(country[1][:7] + country[1][8:])
+    if latestCountryFloat > dateFloat:
+        latestCountry = country[0]
+        latestCountryFloat = dateFloat
+        
+print(f"7. feladata: A legutóljára csatlakozott ország {latestCountry}, és {countriesDict[f"{latestCountry}"][:-1]}-ban csatlakozott") # :-1 to remove new line character
+
+print("8. feladat: Statisztika")
+
+years = {}
+
+for country in countriesList:
+    year = country[1][:4]
+    if year not in years:
+        years.update({f"{year}" : 1})
+    else:
+        years[f"{year}"] += 1
+        
+yearsOutput = []
+
+for year in years:
+    yearsOutput.append(f"{year} - {years[year]} ország")
+    
+yearsOutput.sort()
+    
+for year in yearsOutput:
+    print(year)
